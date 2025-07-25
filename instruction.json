@@ -1,5 +1,5 @@
 {
     "action": "create_or_update_file",
     "file_path": "Memory/test.md",
-    "content": "# Згенеровано командою /ask\n\n"
+    "content": "# Згенеровано командою /ask\n\nСтвори функцію яка перемножує два числа і збережи її у handlers/test_handler.py"
 }
