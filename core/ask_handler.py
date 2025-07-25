@@ -1,21 +1,16 @@
-from core.executor import save_code_to_file
-from core.instruction_queue import instruction_queue
+import json
+from pathlib import Path
+from utils.logger import log_and_print
+from core.executor import execute_instruction
 
-def handle_ask_instruction(text: str) -> str:
-    if not text.lower().startswith("/ask"):
-        return "❌ Невідома інструкція."
+INSTRUCTION_PATH = Path("instruction.json")
 
-    code_request = text[4:].strip()
-    if not code_request:
-        return "❌ Напиши, що треба зробити."
+async def handle_ask_instruction():
+    if not INSTRUCTION_PATH.exists():
+        raise FileNotFoundError("Файл instruction.json не знайдено")
 
-    # 🧠 Генеруємо код (імітація, замінити на реальний GPT call)
-    if "перемножує два числа" in code_request:
-        generated_code = "def multiply(a, b):\n    return a * b"
-        file_path = "handlers/test_handler.py"
-    else:
-        return "❌ Не впізнав запит."
+    with open(INSTRUCTION_PATH, "r") as file:
+        instruction = json.load(file)
 
-    # 📝 Зберігаємо код у файл
-    result = save_code_to_file(generated_code, file_path)
-    return result
+    log_and_print(f"[ASK] Прочитано instruction.json:\n{instruction}")
+    await execute_instruction(instruction)
