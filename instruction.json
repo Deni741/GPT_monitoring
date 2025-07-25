@@ -1,5 +1,6 @@
 {
-    "action": "create_or_update_file",
-    "file_path": "Memory/test.md",
-    "content": "# Згенеровано командою /ask\n\nСтвори функцію яка перемножує два числа і збережи її у handlers/test_handler.py"
+  "action": "create_or_update_file",
+  "file_path": "Memory/test.md",
+  "content": "# Згенеровано командою /ask\n\nСтвори функцію, яка обчислює факторіал і зберігає його результат.",
+  "description": "Створення нового файлу test.md з кодом функції факторіалу"
 }
