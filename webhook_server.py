@@ -1,39 +1,56 @@
 from flask import Flask, request
+import subprocess
 import os
-from core.executor import execute_instruction
-from utils.logger import log_and_print
+import hmac
+import hashlib
 
 app = Flask(__name__)
 
-@app.route("/webhook", methods=["POST"])
+# ==== [ Налаштування ] ====
+REPO_PATH = "/root/GPT_monitoring"
+GITHUB_SECRET = os.environ.get("GITHUB_SECRET", "")  # опціонально
+BRANCH = "main"
+
+# ==== [ Валідація webhook (опціонально) ] ====
+def verify_signature(payload, signature):
+    if not GITHUB_SECRET:
+        return True
+    mac = hmac.new(GITHUB_SECRET.encode(), msg=payload, digestmod=hashlib.sha256)
+    expected_signature = 'sha256=' + mac.hexdigest()
+    return hmac.compare_digest(expected_signature, signature)
+
+# ==== [ Webhook endpoint ] ====
+@app.route('/webhook', methods=['POST'])
 def webhook():
-    data = request.json
-    log_and_print(f"[WEBHOOK] Отримано дані: {data}")
+    payload = request.data
+    signature = request.headers.get('X-Hub-Signature-256')
 
-    if not data:
-        return {"status": "error", "message": "Пусте тіло запиту"}, 400
+    if not verify_signature(payload, signature):
+        return "Invalid signature", 403
 
-    # Перевіряємо ключові поля
-    action = data.get("action")
-    file_path = data.get("file_path")
-    content = data.get("content")
-
-    if not all([action, file_path, content]):
-        return {"status": "error", "message": "Неповні дані"}, 400
-
-    # Виконуємо інструкцію
     try:
-        result = execute_instruction({
-            "action": action,
-            "file_path": file_path,
-            "content": content
-        })
-        return {"status": "ok", "result": result}, 200
-    except Exception as e:
-        log_and_print(f"[WEBHOOK] Помилка: {e}")
-        return {"status": "error", "message": str(e)}, 500
+        os.chdir(REPO_PATH)
+        subprocess.run(['git', 'fetch'], check=True)
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    log_and_print(f"[WEBHOOK] Сервер запущено на порту {port}")
-    app.run(host="0.0.0.0", port=port)
+        diff = subprocess.run(
+            ['git', 'diff', f'HEAD..origin/{BRANCH}', '--name-only'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+
+        if diff.stdout.strip():
+            subprocess.run(['git', 'pull'], check=True)
+            print("✅ Repo updated from GitHub.")
+        else:
+            print("⏩ No changes detected. Skipping pull.")
+
+        return "OK", 200
+
+    except Exception as e:
+        print(f"❌ Error in webhook: {e}")
+        return "Internal error", 500
+
+# ==== [ Запуск сервера ] ====
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
