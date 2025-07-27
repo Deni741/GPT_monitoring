@@ -1,2 +1,1 @@
-# GPT Monitoring Webhook Test  
-  
+# GPT Monitoring Webhook Test
