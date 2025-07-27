@@ -1,24 +1,16 @@
 import os
-import subprocess
-from dotenv import load_dotenv
+from git import Repo
 
-load_dotenv(dotenv_path='.env')
+# Завантажуємо шлях до репозиторію
+repo_dir = os.path.dirname(os.path.abspath(__file__))
+repo = Repo(repo_dir, search_parent_directories=True)
 
-def push_changes(commit_message="Автоматичний push з сервера"):
-    repo_path = os.getcwd()
-    github_token = os.getenv("GITHUB_TOKEN")
+# Додаємо всі зміни
+repo.git.add('--all')
 
-    if not github_token:
-        print("❌ GITHUB_TOKEN не знайдено в .env")
-        return
+# Комітимо з англомовним повідомленням
+repo.index.commit("Autopush from server")
 
-    try:
-        subprocess.run(["git", "add", "."], cwd=repo_path, check=True)
-        subprocess.run(["git", "commit", "-m", commit_message], cwd=repo_path, check=True)
-        subprocess.run(["git", "push"], cwd=repo_path, check=True)
-        print("✅ Зміни успішно запушені на GitHub.")
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Помилка при пуші: {e}")
-
-if __name__ == "__main__":
-    push_changes()
+# Пушимо на GitHub
+origin = repo.remote(name='origin')
+origin.push()
