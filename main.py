@@ -3,12 +3,13 @@ import sys
 import signal
 import psutil
 import atexit
-
 from dotenv import load_dotenv
-from telegram.ext import (
-    ApplicationBuilder, CommandHandler
-)
+from telegram.ext import ApplicationBuilder, CommandHandler
 
+# Codex агент
+from core.codex_agent import push_file
+
+# Хендлери команд
 from handlers.start_handler import start_handler
 from handlers.ask_handler import ask_handler
 from handlers.status_handler import status_handler
@@ -41,13 +42,13 @@ def setup_signal_handlers():
     for sig in [signal.SIGINT, signal.SIGTERM]:
         signal.signal(sig, handler)
 
-# == Якщо вже запущено — вийти ==
+# == Якщо вже запущено – вийти ==
 if os.path.exists(LOCK_FILE):
     with open(LOCK_FILE, "r") as f:
         old_pid = int(f.read())
-        if is_process_running(old_pid):
-            print("Бот уже запущений. Вихід.")
-            sys.exit(0)
+    if is_process_running(old_pid):
+        print("Бот уже запущений. Вихід.")
+        sys.exit(0)
 
 # == Записати lock ==
 create_lock_file()
@@ -59,8 +60,12 @@ load_dotenv()
 
 # == Старт Telegram ==
 TOKEN = os.getenv("BOT_TOKEN")
+if not TOKEN:
+    raise ValueError("BOT_TOKEN не знайдено у .env")
+
 app = ApplicationBuilder().token(TOKEN).build()
 
+# Додаємо команди
 app.add_handler(CommandHandler("start", start_handler))
 app.add_handler(CommandHandler("ask", ask_handler))
 app.add_handler(CommandHandler("status", status_handler))
@@ -69,5 +74,5 @@ app.add_handler(CommandHandler("execute", execute_handler))
 app.add_handler(CommandHandler("confirm", confirm_handler))
 app.add_handler(CommandHandler("refresh", refresh_handler))
 
-log_and_print("🤖 GPT Monitoring Бот запущений")
+log_and_print("✅ GPT Monitoring Бот запущений")
 app.run_polling()
