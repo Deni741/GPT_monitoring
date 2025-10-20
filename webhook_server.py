@@ -1,56 +1,52 @@
-from flask import Flask, request
-import subprocess
-import os
-import hmac
-import hashlib
+from flask import Flask, request, abort
+import hmac, hashlib, subprocess, os, sys, datetime
 
 app = Flask(__name__)
 
-# ==== [ Налаштування ] ====
-REPO_PATH = "/root/GPT_monitoring"
-GITHUB_SECRET = os.environ.get("GITHUB_SECRET", "")  # опціонально
-BRANCH = "main"
+REPO_DIR = "/root/GPT_monitoring"
+LOG_FILE = f"{REPO_DIR}/logs/webhook.log"
+SECRET = os.getenv("GITHUB_WEBHOOK_SECRET", "").encode()
 
-# ==== [ Валідація webhook (опціонально) ] ====
-def verify_signature(payload, signature):
-    if not GITHUB_SECRET:
-        return True
-    mac = hmac.new(GITHUB_SECRET.encode(), msg=payload, digestmod=hashlib.sha256)
-    expected_signature = 'sha256=' + mac.hexdigest()
-    return hmac.compare_digest(expected_signature, signature)
+def log(msg):
+    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(LOG_FILE, "a") as f:
+        f.write(f"[{ts}] {msg}\n")
+    print(msg, flush=True)
 
-# ==== [ Webhook endpoint ] ====
-@app.route('/webhook', methods=['POST'])
+@app.route("/webhook", methods=["POST"])
 def webhook():
-    payload = request.data
-    signature = request.headers.get('X-Hub-Signature-256')
+    signature = request.headers.get("X-Hub-Signature-256")
+    if not signature or not SECRET:
+        log("⚠️ Missing signature or secret")
+        abort(403)
 
-    if not verify_signature(payload, signature):
-        return "Invalid signature", 403
+    sha_name, signature = signature.split("=")
+    mac = hmac.new(SECRET, msg=request.data, digestmod=hashlib.sha256)
+    if not hmac.compare_digest(mac.hexdigest(), signature):
+        log("❌ Invalid signature — possible spoofed request")
+        abort(403)
+
+    event = request.headers.get("X-GitHub-Event")
+    if event != "push":
+        log(f"ℹ️ Ignored non-push event: {event}")
+        return "ignored", 200
 
     try:
-        os.chdir(REPO_PATH)
-        subprocess.run(['git', 'fetch'], check=True)
-
-        diff = subprocess.run(
-            ['git', 'diff', f'HEAD..origin/{BRANCH}', '--name-only'],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
+        log("🔄 Received push event — running git pull...")
+        result = subprocess.run(
+            ["git", "-C", REPO_DIR, "pull", "--rebase"],
+            capture_output=True, text=True
         )
-
-        if diff.stdout.strip():
-            subprocess.run(['git', 'pull'], check=True)
-            print("✅ Repo updated from GitHub.")
+        if result.returncode == 0:
+            log(f"✅ Git pull successful:\n{result.stdout}")
         else:
-            print("⏩ No changes detected. Skipping pull.")
-
-        return "OK", 200
-
+            log(f"❗️ Git pull failed:\n{result.stderr}")
     except Exception as e:
-        print(f"❌ Error in webhook: {e}")
-        return "Internal error", 500
+        log(f"🔥 Exception during git pull: {e}")
+        abort(500)
 
-# ==== [ Запуск сервера ] ====
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    return "ok", 200
+
+if __name__ == "__main__":
+    log("🚀 Webhook server started on port 5000")
+    app.run(host="0.0.0.0", port=5000)
