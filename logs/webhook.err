@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/root/GPT_monitoring/webhook_server.py", line 1, in <module>
+    from future import annotations
+ImportError: cannot import name 'annotations' from 'future' (/root/GPT_monitoring/.venv/lib/python3.12/site-packages/future/__init__.py)
