@@ -1,58 +1,112 @@
+from future import annotations
 from flask import Flask, request, jsonify
-import hmac, hashlib, os, logging
+import hmac, hashlib, os, logging, subprocess, json
 from pathlib import Path
 
-# Підвантажуємо .env, щоб брати секрет звідти
+# ---------- базові речі ----------
+BASE_DIR = Path(__file__).resolve().parent
+LOGS_DIR = BASE_DIR / "logs"
+LOGS_DIR.mkdir(exist_ok=True)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+    handlers=[
+        logging.FileHandler(LOGS_DIR / "webhook.log", encoding="utf-8"),
+        logging.StreamHandler()
+    ],
+)
+log = logging.getLogger("webhook_server")
+
+# .env (не обов'язково; просто не падаємо, якщо відсутній)
 try:
     from dotenv import load_dotenv
-    load_dotenv(Path(__file__).resolve().parent / ".env")
+    load_dotenv(BASE_DIR / ".env")
 except Exception:
     pass
 
-app = Flask(__name__)
-logging.basicConfig(level=logging.INFO)
-
-# Налаштування через .env
-SECRET_RAW = os.getenv("GITHUB_WEBHOOK_SECRET", "")
-VERIFY = os.getenv("VERIFY_SIGNATURE", "true").lower() not in ("0","false","no","off")
+# ---------- налаштування ----------
+# Секрет з GitHub webhook (якщо порожній — підпис перевіряти не будемо)
+SECRET_RAW = os.getenv("GITHUB_WEBHOOK_SECRET", "") or ""
+VERIFY = (os.getenv("VERIFY_SIGNATURE", "true").lower() not in {"0","false","no","off"})
 SECRET = SECRET_RAW.encode() if SECRET_RAW else b""
 
-def verify_signature(req) -> bool:
-    """Перевірка X-Hub-Signature-256. Якщо VERIFY=false або секрет порожній — пропускаємо (діагностика)."""
+# Повний шлях до скрипту оновлення
+UPDATE_SCRIPT = str(BASE_DIR / "scripts" / "git_update.sh")
+
+# Яку гілку приймаємо
+TARGET_REF = os.getenv("WEBHOOK_BRANCH", "refs/heads/main")
+
+# ---------- хелпери ----------
+def _verify_signature(req) -> bool:
+    """Перевіряємо X-Hub-Signature-256. Якщо VERIFY=false або секрет порожній — пропускаємо (діагностика/стенд)."""
     if not VERIFY or not SECRET:
-        app.logger.warning("Signature verification is DISABLED for diagnostics.")
+        log.warning("Signature verification is DISABLED for diagnostics.")
         return True
+
     sig = req.headers.get("X-Hub-Signature-256", "")
     if not sig.startswith("sha256="):
-        app.logger.error("Missing/invalid X-Hub-Signature-256 header.")
+        log.error("Missing/invalid X-Hub-Signature-256 header.")
         return False
+
     digest = "sha256=" + hmac.new(SECRET, req.data, hashlib.sha256).hexdigest()
     ok = hmac.compare_digest(digest, sig)
     if not ok:
-        app.logger.error(f"Signature mismatch. expected={digest} got={sig}")
+        log.error(f"Signature mismatch. expected={digest} got={sig}")
     return ok
+
+
+def _run_update_async() -> None:
+    """
+    Запускаємо скрипт оновлення неблокуюче.
+    Використовуємо systemd-run якщо є, інакше — subprocess.Popen.
+    """
+    try:
+        # спроба через systemd-run (гарно логується в journalctl)
+        subprocess.Popen(
+            ["systemd-run", "--unit=gpt-webhook-update", "--same-dir", UPDATE_SCRIPT],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        log.info("Triggered git_update via systemd-run.")
+    except FileNotFoundError:
+        # fallback: просто фонова команда
+        subprocess.Popen(
+            [UPDATE_SCRIPT],
+            cwd=str(BASE_DIR),
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        log.info("Triggered git_update via subprocess (fallback).")
+
+
+# ---------- Flask ----------
+app = Flask(__name__)
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    try:
-        if not verify_signature(request):
-            return "Invalid signature", 401
+    # 1) перевірка підпису
+    if not _verify_signature(request):
+        return "Invalid signature", 401
 
-        event = request.headers.get("X-GitHub-Event", "")
-        payload = request.get_json(silent=True) or {}
-        app.logger.info(f"Webhook OK: event={event} ref={payload.get('ref')}")
+    # 2) витягуємо тип події
+    event = request.headers.get("X-GitHub-Event", "")
+    payload = request.get_json(silent=True) or {}
 
-        # На push тригеримо оновлення з GitHub
-        os.system(
-            "flock -n /root/GPT_monitoring/main.lock "
-            "-c '/usr/bin/env bash /root/GPT_monitoring/scripts/git_update.sh' "
-            ">/root/GPT_monitoring/logs/webhook_pull.log 2>&1 &"
-        )
+    # 3) обробляємо тільки push у потрібну гілку
+    if event == "push":
+        ref = payload.get("ref", "")
+        log.info(f"Webhook OK: event=push ref={ref}")
+        if ref == TARGET_REF:
+            _run_update_async()
+            return jsonify(ok=True), 200
+        else:
+            log.info(f"Ignored: ref {ref} != {TARGET_REF}")
+            return jsonify(ignored=True), 200
 
-        return jsonify({"ok": True}), 200
-    except Exception as e:
-        app.logger.exception(f"Webhook handler error: {e}")
-        return "Internal error", 500
+    # Інші події можна ігнорити/логувати
+    log.info(f"Ignored event type: {event}")
+    return jsonify(ignored=True), 200
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    # Локальний запуск (systemd і так підніме через ExecStart)
+    app.run(host="0.0.0.0", port=5000)
