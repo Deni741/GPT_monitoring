@@ -1,30 +1,61 @@
 from flask import Flask, request, jsonify
-import hmac, hashlib, os
+import hmac, hashlib, os, json, logging
+from pathlib import Path
+
+# підвантажимо .env, щоб не прописувати секрети в unit
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parent / ".env")
+except Exception:
+    pass
 
 app = Flask(__name__)
+logging.basicConfig(level=logging.INFO)
 
-@app.route('/webhook', methods=['POST'])
-def handle_webhook():
-    secret = os.getenv("GITHUB_WEBHOOK_SECRET")
-    signature = request.headers.get("X-Hub-Signature-256", "")
-    data = request.data
+# Налаштування
+SECRET_RAW = os.getenv("GITHUB_WEBHOOK_SECRET", "")
+VERIFY = os.getenv("VERIFY_SIGNATURE", "true").lower() not in ("0","false","no","off")
+SECRET = SECRET_RAW.encode() if SECRET_RAW else b""
 
-    # Перевіряємо підпис
-    expected_signature = "sha256=" + hmac.new(
-        secret.encode(), data, hashlib.sha256
-    ).hexdigest()
+def verify_signature(req) -> bool:
+    """Перевірка X-Hub-Signature-256. Якщо VERIFY=false або секрет порожній — пропускаємо (діагностика)."""
+    if not VERIFY or not SECRET:
+        app.logger.warning("Signature verification is DISABLED for diagnostics.")
+        return True
+    sig = req.headers.get("X-Hub-Signature-256", "")
+    if not sig.startswith("sha256="):
+        app.logger.error("Missing/invalid X-Hub-Signature-256 header.")
+        return False
+    digest = "sha256=" + hmac.new(SECRET, req.data, hashlib.sha256).hexdigest()
+    ok = hmac.compare_digest(digest, sig)
+    if not ok:
+        app.logger.error(f"Signature mismatch. expected={digest} got={sig}")
+    return ok
 
-    if not hmac.compare_digest(signature, expected_signature):
-        return jsonify({"error": "invalid signature"}), 403
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    try:
+        if not verify_signature(request):
+            return "Invalid signature", 401
 
-    print("✅ Webhook event received and verified")
-    os.system("cd /root/GPT_monitoring && git pull origin main")
-    return jsonify({"status": "success"}), 200
+        event = request.headers.get("X-GitHub-Event", "")
+        payload = request.get_json(silent=True) or {}
+        app.logger.info(f"Webhook OK: event={event} ref={payload.get('ref')}")
 
+        # На push робимо git pull через наш скрипт (працює у фоні, з логами)
+        if event == "push":
+            rc = os.system(
+                "flock -n /root/GPT_monitoring/main.lock "
+                "-c '/usr/bin/env bash /root/GPT_monitoring/scripts/git_update.sh' "
+                ">/root/GPT_monitoring/logs/webhook_pull.log 2>&1 &"
+            )
+            app.logger.info(f"Triggered git_update.sh rc={rc}")
 
-@app.route('/', methods=['GET'])
-def root():
-    return "Webhook server running", 200
+        return jsonify({"ok": True}), 200
+    except Exception as e:
+        app.logger.exception(f"Webhook handler error: {e}")
+        return "Internal error", 500
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    # прод режим: debug=False
+    app.run(host="0.0.0.0", port=5000, debug=False)
