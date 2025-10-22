@@ -1,52 +1,30 @@
-from flask import Flask, request, abort
-import hmac, hashlib, subprocess, os, sys, datetime
+from flask import Flask, request, jsonify
+import hmac, hashlib, os
 
 app = Flask(__name__)
 
-REPO_DIR = "/root/GPT_monitoring"
-LOG_FILE = f"{REPO_DIR}/logs/webhook.log"
-SECRET = os.getenv("GITHUB_WEBHOOK_SECRET", "").encode()
+@app.route('/webhook', methods=['POST'])
+def handle_webhook():
+    secret = os.getenv("GITHUB_WEBHOOK_SECRET")
+    signature = request.headers.get("X-Hub-Signature-256", "")
+    data = request.data
 
-def log(msg):
-    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open(LOG_FILE, "a") as f:
-        f.write(f"[{ts}] {msg}\n")
-    print(msg, flush=True)
+    # Перевіряємо підпис
+    expected_signature = "sha256=" + hmac.new(
+        secret.encode(), data, hashlib.sha256
+    ).hexdigest()
 
-@app.route("/webhook", methods=["POST"])
-def webhook():
-    signature = request.headers.get("X-Hub-Signature-256")
-    if not signature or not SECRET:
-        log("⚠️ Missing signature or secret")
-        abort(403)
+    if not hmac.compare_digest(signature, expected_signature):
+        return jsonify({"error": "invalid signature"}), 403
 
-    sha_name, signature = signature.split("=")
-    mac = hmac.new(SECRET, msg=request.data, digestmod=hashlib.sha256)
-    if not hmac.compare_digest(mac.hexdigest(), signature):
-        log("❌ Invalid signature — possible spoofed request")
-        abort(403)
+    print("✅ Webhook event received and verified")
+    os.system("cd /root/GPT_monitoring && git pull origin main")
+    return jsonify({"status": "success"}), 200
 
-    event = request.headers.get("X-GitHub-Event")
-    if event != "push":
-        log(f"ℹ️ Ignored non-push event: {event}")
-        return "ignored", 200
 
-    try:
-        log("🔄 Received push event — running git pull...")
-        result = subprocess.run(
-            ["git", "-C", REPO_DIR, "pull", "--rebase"],
-            capture_output=True, text=True
-        )
-        if result.returncode == 0:
-            log(f"✅ Git pull successful:\n{result.stdout}")
-        else:
-            log(f"❗️ Git pull failed:\n{result.stderr}")
-    except Exception as e:
-        log(f"🔥 Exception during git pull: {e}")
-        abort(500)
+@app.route('/', methods=['GET'])
+def root():
+    return "Webhook server running", 200
 
-    return "ok", 200
-
-if __name__ == "__main__":
-    log("🚀 Webhook server started on port 5000")
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
