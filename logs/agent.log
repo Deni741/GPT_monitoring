@@ -28476,3 +28476,126 @@ type
 2025-10-22 15:02:05,876 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
 2025-10-22 15:02:05,876 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
 2025-10-22 15:02:05,877 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:02:20,877 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:02:20,879 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:02:20,879 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:02:35,879 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:02:35,880 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:02:35,880 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:02:50,880 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:02:50,881 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:02:50,881 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:03:05,881 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:03:05,882 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:03:05,882 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:03:20,883 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:03:20,884 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:03:20,884 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:03:35,885 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:03:35,885 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:03:35,885 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:03:50,886 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:03:50,886 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:03:50,886 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:04:05,887 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:04:05,888 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:04:05,888 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:04:20,889 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:04:20,891 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:04:20,891 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:04:35,891 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:04:35,892 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:04:35,892 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:04:50,893 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:04:50,894 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:04:50,894 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:05:05,894 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:05:05,895 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:05:05,895 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:05:20,896 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:05:20,898 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:05:20,898 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:05:35,898 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:05:35,899 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:05:35,899 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:05:50,899 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:05:50,900 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:05:50,900 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:06:05,901 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:06:05,901 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:06:05,901 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:06:20,902 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:06:20,903 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:06:20,903 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:06:35,904 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:06:35,904 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:06:35,904 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:06:50,905 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:06:50,906 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:06:50,906 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:07:05,906 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:07:05,907 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:07:05,907 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:07:20,908 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:07:20,908 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:07:20,908 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:07:35,908 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:07:35,909 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:07:35,909 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:07:50,909 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:07:50,910 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:07:50,910 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:08:05,911 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:08:05,913 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:08:05,913 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:08:20,913 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:08:20,914 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:08:20,914 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:08:35,915 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:08:35,915 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:08:35,916 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:08:50,916 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:08:50,918 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:08:50,918 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:09:05,918 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:09:05,920 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:09:05,920 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:09:20,920 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:09:20,922 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:09:20,922 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:09:35,922 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:09:35,924 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:09:35,924 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:09:50,924 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:09:50,925 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:09:50,925 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:10:05,925 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:10:05,926 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:10:05,926 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:10:20,927 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:10:20,927 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:10:20,927 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:10:35,928 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:10:35,929 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:10:35,929 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:10:50,930 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:10:50,931 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:10:50,931 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:11:05,931 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:11:05,932 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:11:05,932 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:11:20,933 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:11:20,934 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:11:20,934 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:11:35,935 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:11:35,936 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:11:35,937 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:11:50,937 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:11:50,938 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:11:50,938 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:12:05,938 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:12:05,939 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:12:05,940 | INFO | agent | main:99 - Processing task type: note
+2025-10-22 15:12:20,940 | INFO | agent | main:117 - Heartbeat | goals=[] | dry_run=False
+2025-10-22 15:12:20,941 | INFO | agent | main:128 - Processing task: {'type': 'note', 'text': 'Завтра о 10:00 подзвонити Сергію, узгодити ТЗ по боту.', 'priority': 2}
+2025-10-22 15:12:20,941 | INFO | agent | main:99 - Processing task type: note
