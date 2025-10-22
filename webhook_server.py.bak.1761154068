@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
-import hmac, hashlib, os, logging
+import hmac, hashlib, os, json, logging
 from pathlib import Path
 
-# Підвантажуємо .env, щоб брати секрет звідти
+# підвантажимо .env, щоб не прописувати секрети в unit
 try:
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).resolve().parent / ".env")
@@ -12,7 +12,7 @@ except Exception:
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-# Налаштування через .env
+# Налаштування
 SECRET_RAW = os.getenv("GITHUB_WEBHOOK_SECRET", "")
 VERIFY = os.getenv("VERIFY_SIGNATURE", "true").lower() not in ("0","false","no","off")
 SECRET = SECRET_RAW.encode() if SECRET_RAW else b""
@@ -42,12 +42,14 @@ def webhook():
         payload = request.get_json(silent=True) or {}
         app.logger.info(f"Webhook OK: event={event} ref={payload.get('ref')}")
 
-        # На push тригеримо оновлення з GitHub
-        os.system(
-            "flock -n /root/GPT_monitoring/main.lock "
-            "-c '/usr/bin/env bash /root/GPT_monitoring/scripts/git_update.sh' "
-            ">/root/GPT_monitoring/logs/webhook_pull.log 2>&1 &"
-        )
+        # На push робимо git pull через наш скрипт (працює у фоні, з логами)
+        if event == "push":
+            rc = os.system(
+                "flock -n /root/GPT_monitoring/main.lock "
+                "-c '/usr/bin/env bash /root/GPT_monitoring/scripts/git_update.sh' "
+                ">/root/GPT_monitoring/logs/webhook_pull.log 2>&1 &"
+            )
+            app.logger.info(f"Triggered git_update.sh rc={rc}")
 
         return jsonify({"ok": True}), 200
     except Exception as e:
@@ -55,4 +57,5 @@ def webhook():
         return "Internal error", 500
 
 if __name__ == "__main__":
+    # прод режим: debug=False
     app.run(host="0.0.0.0", port=5000, debug=False)
