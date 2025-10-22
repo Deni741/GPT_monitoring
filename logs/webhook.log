@@ -849,3 +849,17 @@
 2025-08-12 19:25:15,742 INFO 165.22.220.236 - - [12/Aug/2025 19:25:15] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
 [2025-10-20 23:58:04] 🚀 Webhook server started on port 5000
 [2025-10-22 20:06:15] ⚠️ Missing signature or secret
+ * Serving Flask app 'webhook_server'
+ * Debug mode: off
+2025-10-22 21:50:07,385 | INFO | werkzeug | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://195.14.122.180:5000
+2025-10-22 21:50:07,386 | INFO | werkzeug | [33mPress CTRL+C to quit[0m
+ * Serving Flask app 'webhook_server'
+ * Debug mode: off
+2025-10-22 21:50:25,221 | INFO | werkzeug | [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://195.14.122.180:5000
+2025-10-22 21:50:25,222 | INFO | werkzeug | [33mPress CTRL+C to quit[0m

@@ -1,4 +1,4 @@
-from future import annotations
+#from future import annotations
 from flask import Flask, request, jsonify
 import hmac, hashlib, os, logging, subprocess, json
 from pathlib import Path
