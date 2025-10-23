@@ -7,6 +7,7 @@ from logging.handlers import RotatingFileHandler
 from dataclasses import dataclass
 from dotenv import load_dotenv
 from pathlib import Path
+from utils.telegram import notify
 
 # --- Шляхи ---
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -99,11 +100,14 @@ def process_task(task: dict) -> None:
     logger.info(f"Processing task type: {task_type}")
 
     if task_type == "note":
-        text = task.get("task", "")
-        if text:
-            logger.info(f"NOTE: {text}")
-            answer = do_llm_prompt(f"Коротко підтверди отримання нотатки і дії: {text}")
-            logger.info(f"LLM: {answer}")
+    text = task.get("task", "")
+    if text:
+        logger.info(f"NOTE: {text}")
+        # 🔔 Надсилаємо повідомлення в Telegram
+        notify(f"🗒️ <b>Note отримано:</b>\n{text}")
+
+        answer = do_llm_prompt(f"Коротко підтвердь отримання нотатки і дії: {text}")
+        logger.info(f"LLM: {answer}")
 
     elif task_type == "test":
         logger.info(f"🧠 Test task received: {task}")
